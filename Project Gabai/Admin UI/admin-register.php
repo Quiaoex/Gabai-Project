@@ -3,11 +3,12 @@
 
     // connect to the database
     $db = mysqli_connect("localhost","root","","gabai_database");
+    
 
     if(!$db){
         die("connection error...".mysqli_connect_error());
     }else{
-        echo "You are successfully connected.";
+        
     }
     
     if(isset($_POST['email']) && isset($_POST['password'])){
@@ -16,16 +17,25 @@
         $lastname=$_POST['lastname'];
         $email=$_POST['email'];
         $password=$_POST['password'];
-        
+        if  ($firstname == "" && $lastname=="" && $email == "" && $password == ""){
+            function function_alert($message) {
+                echo "<script>alert('$message');</script>";
+
+                function_alert("Fields Cannot Be Empty");
+            }
+        }
+      else{  
     $temp = mysqli_query($db,"INSERT INTO admin_user (id,first_name,last_name,admin_email,admin_password) 
     VALUES (NULL,'$firstname','$lastname','$email','$password')");
     
-    if(!$temp){
-        echo "error";
-    }else{
-        echo "Your registration is done.";
+    if(isset($_POST['submit'])){
+        header("Location: ./admin-success-register.php");
+        exit;
+    }else {
+        echo 'error';
     }
     }
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -84,7 +94,7 @@
                                                 </div>
                                             </div>
                                             <div class="mt-4 mb-0">
-                                                <input class="d-gridbtn btn-block" style="background-color: #542C0C; color: white;"name="submit" type="submit" value="Create Account">
+                                                <div class="d-grid "><input class="btn btn-block" style=" background-color: #542C0C; color: white;"name="submit" type="submit" value="Create Account"></div>
                                             </div>
                                         </form>
                                     </div>
