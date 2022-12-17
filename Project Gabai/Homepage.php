@@ -1,3 +1,6 @@
+<?php
+    include_once './register-user.php';
+?>
 <!doctype html>
 <html lang="en">
   <head>
@@ -10,7 +13,6 @@
     <script src="./JS/log-in-scripts.js"></script>
   </head>
   <body style="overflow-x: hidden; overflow-y: auto; font-family:Roboto;" onkeydown="">
-  <
     <header class="p-3 text- hdr1">
         <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
           <img src="./Images/Gabai.png" width="100vw" height="100%" class="logo"/>
@@ -83,14 +85,15 @@
             <!-- Image -->
               <img src="Images/04 1.png" class="img-fluid mw-md-130 mw-lg-130 mb-6 mb-md-0 aos-init aos-animate clndr" alt="..." data-aos="fade-up" data-aos-delay="100">
             </div>
-</div>      
+          </div>   
+               
             <div class="row align-items-center text-endm ">
-              <div class="col-12 col-md-5 col-lg-6 order-md-2 lstbtn">
+              <div class="  col-6 order-md-2 lstbtn" style="padding-left: 350px;">
               <!-- Buttons -->
-              <a href="" class=" fs-4 ydhac" style="color: black;">
-                You dont have an account? <i class="fe fe-arrow-right d-none d-md-inline ms-3"></i>
-              </a>
-              <button type="button" class="btn  logn mx-3" data-bs-toggle="modal" data-bs-target="#exampleModal2" style="font-family:Roboto; background:#542C0C;" >Sign Up</button>
+              
+                <button type="button" class="btn logn" data-bs-toggle="modal" data-bs-target="#exampleModal2" style="font-family:Roboto; background:#542C0C;" >Sign Up</button>
+
+             
               
               
               
@@ -106,30 +109,38 @@
          
         </div>
         <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-          <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable ">
-            <div class="modal-content shadow mdlbg">
+          <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content shadow mdlbg ">
               <div class="modal-header p-5 pb-4 border-bottom-0 text-center">
                 <!-- <h1 class="modal-title fs-5" >Modal title</h1> -->
                 <h1 class="fw-bold mb-0 fs-1 ">Let's be productive together!</h1>
                 <button type="button" class="btn-close closebtn" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>               
                 <div class="modal-body p-5 pt-0">
-                  <form class="">
-                    <div class="form-floating mb-3">
-                      <input type="email" class="form-control rounded-3 " id="floatingInput" placeholder="name@example.com">
-                        <label for="floatingInput">Username</label>
+                  <form class="" action="" method="POST">
+                    <div class="row">
+                      <div class="form-floating">
+                        <div class="form-floating mb-3">
+                          <input type="text" class="form-control rounded-3" name="firstname" id="firstname" placeholder="name@example.com">
+                          <label for="firstname">First Name</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                          <input type="text" class="form-control rounded-3" name="lastname" id="lastname" placeholder="name@example.com">
+                          <label for="lastname">Last Name</label>
+                        </div>
+                      </div>
                     </div>
                     <div class="form-floating mb-3">
-                      <input type="email" class="form-control rounded-3 " id="floatingInput" placeholder="name@example.com">
-                        <label for="floatingInput">Email</label>
+                      <input type="email" class="form-control rounded-3" name="email" id="email" placeholder="name@example.com">
+                        <label for="email">Email</label>
                     </div>
                     <div class="form-floating mb-3">
-                      <input type="email" class="form-control rounded-3 " id="floatingInput" placeholder="name@example.com">
-                        <label for="floatingInput">Password</label>
+                      <input type="password" class="form-control rounded-3" name="password" id="password" placeholder="name@example.com">
+                        <label for="password">Password</label>
                     </div>
                       <div class="form-floating mb-3">
-                        <input type="password" class="form-control rounded-3 " id="floatingPassword" placeholder="Password">
-                          <label for="floatingPassword">Confirm Password</label>
+                        <input type="password" class="form-control rounded-3 " id="confirmpassword" placeholder="Password">
+                          <label for="confirmpassword">Confirm Password</label>
                           
                       </div>
                       <button class="w-100 mb-2 btn btn-lg rounded-3 btn lgnmdl" type="submit">SIGN UP</button>
