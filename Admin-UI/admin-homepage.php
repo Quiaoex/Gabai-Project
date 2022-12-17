@@ -1,6 +1,18 @@
 <?php
 
     require_once '../gabai-database.php';
+    $userdetails = $gabai->get_userdata();
+
+    if(isset($userdetails)){
+        if(($userdetails['access'] != "admin")){
+            echo '<script type="text/javascript">';
+            echo ' alert("Cannot Log-in as User need to be Admin")';  //not showing an alert box.
+            echo '</script>';
+            header("Location: ../Admin-UI/admin-login.php");
+        }
+    } else {
+        header("Location: ../Admin-UI/admin-login.php");
+    }
 
 ?>
 <!DOCTYPE html>
@@ -28,7 +40,7 @@
                 <li class="nav-item dropdown mt-2">
                     <a class="nav-link dropdown-toggle" style="color: #542C0C;" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item a-hover"  href="admin-login.php" onclick="">Logout</a></li>
+                        <li><a class="dropdown-item a-hover"  href="../Admin-UI/logout.php" onclick="">Logout</a></li>
                     </ul>
                 </li>
             </ul>
