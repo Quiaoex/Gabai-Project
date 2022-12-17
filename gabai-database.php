@@ -38,7 +38,7 @@ Class Gabai {
             
 
         $connection = $this->openConnection();
-        $stmt = $connection->prepare("SELECT * FROM admin_user WHERE admin_email = ? AND admin_password = ? ");
+        $stmt = $connection->prepare("SELECT * FROM user WHERE email = ? AND password = ? ");
         $stmt->execute([$email,$password]);
         $user = $stmt->fetch();
         $total = $stmt->rowCount();
@@ -47,7 +47,9 @@ Class Gabai {
             echo '<script type="text/javascript">';
             echo ' alert("Log in Success")';  //not showing an alert box.
             echo '</script>';
+            $this->set_userdata($user);
             header('Location: ../Admin-UI/admin-homepage.php');
+
         } else {
             echo '<script type="text/javascript">';
             echo ' alert("Log in Failed")';  //not showing an alert box.
@@ -59,12 +61,53 @@ Class Gabai {
         }
     }
 
+    public function set_userdata($array)
+    {
+        if(!isset($_SESSION)){
+            session_start();
+        }
+
+        $_SESSION['userdata'] = array(
+                "fullname" => $array['first_name']." ".$array['last_name'],
+                "access" => $array['access']
+        );
+
+        return $_SESSION['userdata'];
+    }
+
+
+    public function get_userdata()
+    {
+        if(!isset($_SESSION)){
+            session_start();
+        }
+
+        if(isset($_SESSION['userdata'])){
+           return $_SESSION['userdata'];
+        } else {
+            return null;
+        }
+
+        
+    }
+
+    public function log_out()
+    {
+        if(!isset($_SESSION)){
+            session_start();
+        }
+
+        $_SESSION['userdata'] = null;
+        unset($_SESSION['userdata']);
+    }
+
+
     public function check_email_exist($email)
     {
         $email = $_POST['email'];
 
         $connection = $this->openConnection();
-        $stmt = $connection->prepare("SELECT * FROM admin_user WHERE admin_email = ?");
+        $stmt = $connection->prepare("SELECT * FROM user WHERE email = ?");
         $stmt->execute([$email,]);
         $total = $stmt->rowCount();
 
@@ -84,7 +127,7 @@ Class Gabai {
 
         if($this->check_email_exist($email) == 0){
             $connection = $this->openConnection();
-            $stmt = $connection->prepare("INSERT INTO admin_user(`first_name`,`last_name`,`admin_email`,`admin_password`)
+            $stmt = $connection->prepare("INSERT INTO user(`first_name`,`last_name`,`email`,`password`)
             VALUE (?,?,?,?)");
             $stmt->execute([$fname,$lname,$email,$password]);
             }else {
