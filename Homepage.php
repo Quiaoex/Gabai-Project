@@ -1,4 +1,10 @@
 <?php
+
+    require_once './gabai-database.php';
+    require_once './user-data.php';
+    $gabai->user_login();
+    $gabai->user_register();
+    
     
 ?>
 <!doctype html>
@@ -6,7 +12,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Gabai</title>
+    <title>Gabai Homepage</title>
     <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'> 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
     <link rel="stylesheet" href="./Style/Webhomepagestyle.css">
@@ -21,12 +27,12 @@
             <li><a href="#" class="nav-link px-2 text-secondary"></a></li>
           </ul>
           <div class="text-end mx-3">
-          <button type="button" class="btn  logn mx-3" data-bs-toggle="modal" data-bs-target="" style="font-family:Roboto; background:#542C0C;" >
-          ABOUT</button>
-            <button type="button" class="btn  logn " data-bs-toggle="modal" data-bs-target="#exampleModal" style="font-family:Roboto; background:#542C0C;">
-            LOGIN</button>
+          <button type="button" class="btn  logn mx-3" data-bs-toggle="modal" data-bs-target="#login" style="font-family:Roboto; background:#542C0C;" >
+          LOGIN</button>
+            <button type="button" class="btn  logn " data-bs-toggle="modal" data-bs-target="#register" style="font-family:Roboto; background:#542C0C;">
+           SIGN UP</button>
                 <!-- Modal -->
-                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal fade" id="login" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable ">
                     <div class="modal-content shadow mdlbg">
                       <div class="modal-header p-5 pb-4 border-bottom-0 text-center">
@@ -36,20 +42,21 @@
                         <button type="button" class="btn-close closebtn" data-bs-dismiss="modal" aria-label="Close"></button>
                       </div>               
                         <div class="modal-body p-5 pt-0">
-                          <form class="" method="GET" action="">
+                          <form class="" method="POST" action="">
                             <div class="form-floating mb-3">
-                              <input type="text" class="form-control rounded-3 " id="email-input" placeholder="name@example.com">
+                              <input type="text" class="form-control rounded-3 " name="user-email" id="user-email" placeholder="name@example.com">
                                 <label for="floatingInput">Email or Username</label>
                             </div>
                               <div class="form-floating mb-3">
-                                <input type="password" class="form-control rounded-3" id="password-input" placeholder="Password">
+                                <input type="password" class="form-control rounded-3" name="user-password" id="user-password" placeholder="Password">
                                   <label for="floatingPassword">Password</label>
                                   <a href="#" type="button" class="link-primary"data-bs-toggle="modal" data-bs-target="#exampleModal2">Don't have an account?</a>
                               </div>
-                              
-                             
-                                <button class="w-100 mb-2 btn btn-lg rounded-3 btn lgnmdl" type="button" onclick="log_in_user()">LOG IN</button>
-                                <button type="button" class="w-100 mb-2 btn btn-lg rounded-3 btn lgnmdl" data-bs-toggle="modal" data-bs-target="#exampleModal2" style="font-family:Roboto; background:#542C0C;" >Sign Up</button>  
+                              <div class="mt-4 mb-0">
+                                <div class="d-grid ">
+                                  <button class="btn btn-block" style=" background-color: #542C0C; color: white;"name="login" type="submit" value="Create Account">Login</button>
+                                </div>
+                              </div>
                            </form>
                            
                         </div>
@@ -100,9 +107,10 @@
   
             </div>
           </div>
+          
          
         </div>
-        <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal fade" id="register" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
           <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content shadow mdlbg ">
               <div class="modal-header p-5 pb-4 border-bottom-0 text-center">
@@ -115,11 +123,11 @@
                     <div class="row">
                       <div class="form-floating">
                         <div class="form-floating mb-3">
-                          <input type="text" class="form-control rounded-3" name="firstname" id="firstname" placeholder="name@example.com">
+                          <input type="text" class="form-control rounded-3" name="fname" id="fname" placeholder="name@example.com">
                           <label for="firstname">First Name</label>
                         </div>
                         <div class="form-floating mb-3">
-                          <input type="text" class="form-control rounded-3" name="lastname" id="lastname" placeholder="name@example.com">
+                          <input type="text" class="form-control rounded-3" name="lname" id="lname" placeholder="name@example.com">
                           <label for="lastname">Last Name</label>
                         </div>
                       </div>
@@ -137,22 +145,19 @@
                           <label for="confirmpassword">Confirm Password</label>
                           
                       </div>
-                      <button class="w-100 mb-2 btn btn-lg rounded-3 btn lgnmdl" type="submit">SIGN UP</button>
-                                  
+                      <div class="mt-4 mb-0">
+                        <div class="d-grid ">
+                          <button class="btn btn-block" style=" background-color: #542C0C; color: white;"name="register" type="submit" value="Create Account">Register</button>
+                        </div>
+                      </div>           
                     </form>
+                    
                  </div>
                </div>
+               
           </div>
-          <div id="layoutAuthentication_footer">
-                <footer class="py-4 bg-light mt-auto">
-                    <div class="container-fluid px-4">
-                        <div class="d-flex align-items-center justify-content-between small">
-                            <div class="text-muted">Copyright &copy; Gabai 2022</div>
-                        </div>
-                    </div>
-                </footer>
-            </div>
-        </div>    
+          
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
   </body>
+  
 </html>

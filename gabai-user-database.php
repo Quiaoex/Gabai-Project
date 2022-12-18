@@ -1,6 +1,6 @@
 <?php
 
-Class Gabai {
+Class GabaiDB {
 
     private $server = "mysql:host=localhost;dbname=gabai_database";
     private $user = "root";
@@ -29,120 +29,6 @@ Class Gabai {
         $this->con = null;
     }
 
-    public function admin_login()
-    {
-        if(isset($_POST['submit'])){
-
-            $email = $_POST['email'];
-            $password = md5($_POST['password']);
-            $access = 'admin';
-            
-
-        $connection = $this->openConnection();
-        $stmt = $connection->prepare("SELECT * FROM user WHERE email = ? AND password = ? AND access = ?");
-        $stmt->execute([$email,$password,$access]);
-        $user = $stmt->fetch();
-        $total = $stmt->rowCount();
-
-        if($total > 0){
-            echo '<script type="text/javascript">';
-            echo ' alert("Log in Success")';  //not showing an alert box.
-            echo '</script>';
-            $this->set_userdata($user);
-            header('Location: ../Admin-UI/admin-homepage.php');
-
-        } else {
-            echo '<script type="text/javascript">';
-            echo ' alert("Log in Failed!")';  //not showing an alert box.
-            echo '</script>';
-        }
-
-
-
-        }
-    }
-
-    public function set_userdata($array)
-    {
-        if(!isset($_SESSION)){
-            session_start();
-        }
-
-        $_SESSION['userdata'] = array(
-                "fullname" => $array['first_name']." ".$array['last_name'],
-                "access" => $array['access']
-        );
-
-        return $_SESSION['userdata'];
-    }
-
-
-    public function get_userdata()
-    {
-        if(!isset($_SESSION)){
-            session_start();
-        }
-
-        if(isset($_SESSION['userdata'])){
-           return $_SESSION['userdata'];
-        } else {
-            return null;
-        }
-
-        
-    }
-
-    public function log_out()
-    {
-        if(!isset($_SESSION)){
-            session_start();
-        }
-
-        $_SESSION['userdata'] = null;
-        unset($_SESSION['userdata']);
-    }
-
-
-    public function check_email_exist($email)
-    {
-        $email = $_POST['email'];
-
-        $connection = $this->openConnection();
-        $stmt = $connection->prepare("SELECT * FROM user WHERE email = ?");
-        $stmt->execute([$email,]);
-        $total = $stmt->rowCount();
-
-        return $total;
-    }
-
-
-    public function admin_register()
-    {   
-        if(isset($_POST['register'])){
-            
-            $fname = $_POST['fname'];
-            $lname = $_POST['lname'];
-            $email = $_POST['email'];
-            $password = md5($_POST['password']);
-            $access = "admin";
-
-
-        if($this->check_email_exist($email) == 0){
-            $connection = $this->openConnection();
-            $stmt = $connection->prepare("INSERT INTO user(`first_name`,`last_name`,`email`,`password`,`access`)
-            VALUE (?,?,?,?,?)");
-            $stmt->execute([$fname,$lname,$email,$password,$access]);
-            header('Location: ../Admin-UI/admin-success-register.php');
-
-            }else {
-                echo '<script type="text/javascript">';
-                echo ' alert("Email already taken.")';  //not showing an alert box.
-                echo '</script>';
-            }
-        }
-
-    }
-
     public function user_login()
     {
         if(isset($_POST['login'])){
@@ -162,7 +48,7 @@ Class Gabai {
             echo '<script type="text/javascript">';
             echo ' alert("Log in Success")';  //not showing an alert box.
             echo '</script>';
-            $this->set_userdata($user);
+            $this->user_set_userdata($user);
             header('Location: ./User-UI/user-homepage.php');
 
         } else {
@@ -170,8 +56,52 @@ Class Gabai {
             echo ' alert("Log in Failed!")';  //not showing an alert box.
             echo '</script>';
         }
+
+
+
         }
-    } 
+    }
+
+    public function user_set_userdata($array)
+    {
+        if(!isset($_SESSION)){
+            session_start();
+        }
+
+        $_SESSION['userdata'] = array(
+                "fullname" => $array['first_name']." ".$array['last_name'],
+                "access" => $array['access']
+        );
+
+        return $_SESSION['userdata'];
+    }
+
+
+    public function user_get_userdata()
+    {
+        if(!isset($_SESSION)){
+            session_start();
+        }
+
+        if(isset($_SESSION['userdata'])){
+           return $_SESSION['userdata'];
+        } else {
+            return null;
+        }
+
+        
+    }
+
+    public function user_log_out()
+    {
+        if(!isset($_SESSION)){
+            session_start();
+        }
+
+        $_SESSION['userdata'] = null;
+        unset($_SESSION['userdata']);
+    }
+
 
     public function user_check_email_exist($email)
     {
@@ -214,7 +144,10 @@ Class Gabai {
         }
 
     }
-}
-$gabai = new Gabai();
+    
+
+} 
+
+$ugabai = new GabaiDB();
 
 ?>
