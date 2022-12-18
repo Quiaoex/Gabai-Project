@@ -16,7 +16,7 @@
 <body>
         <ul>
             <?php foreach($notes as $notes){?>
-                <li><?php echo $notes['note_title'];?> | <?php echo $notes['user_notes']; ?></li>
+                <li><?php echo $notes['note_title'];?> |<?php echo $notes['note_title'];?> | <?php echo $notes['user_notes']; ?></li>
             <?php }?>
         </ul>
         <ul>

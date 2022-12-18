@@ -318,61 +318,37 @@
         <main class="col-md-9 ms-sm-auto col-lg-10 px-md-3 gitna" style="background-color:#E9E3D7 ; margin-left: 0%!important; width: 91%; ">
           <main class="mt-3 mb-3 mainbox" style="background-color:white ;">
             <div class="row" id="row">
-              <!-- <div class="col-4 col-sm-12 col-md-4">
-                
+            <div class="col-4 col-sm-12 col-md-4">
+               <form method="POST">
               <div class="notebox">
                   <div class="notedatecontainer"><h6>6 June</h6></div>
-                  <textarea class="form-control noteheading" maxlength="25">
-      Note Heading</textarea
-                  >
+                  <textarea name="note-title" class="form-control noteheading" maxlength="25" placeholer="Title">Note Heading</textarea>
                   <div class="notecontainer">
-                    <textarea class="notedata form-control" style="height: 190px">
-      Note Text</textarea
-                    >
+                    <textarea name="note" class="notedata form-control" style="height: 190px">Note Text</textarea>
                   </div>
                   <div class="noteaction">
-                    <i class="fa fa-floppy-o" id="savebtn0"></i
-                    ><i class="fa fa-trash" id="deletebtn0"></i>
+                    <button type="submit" name="add-note"></button>
+                    <button type="delete" name="delete-note"></button>
                   </div>
                 </div>
-              </div> -->
+              </form> 
+              </div>
             </div>
-          
-          <div>
-           <button class="fa fa-plus" data-bs-toggle="modal" data-bs-target="#login" ></button>
+           
+        <form method="POST">
+          <div  id="addbox">
+            <button type="button" name="add" style="background-color: transparent; border-color:transparent"><i class="fa fa-plus"></i></button>
           </div>
-
-          <div class="modal fade" id="login" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable ">
-                    <div class="modal-content shadow" style="background-color: #E0B894;">
-                      <div class="modal-header p-5 pb-4 border-bottom-0 text-center">
-                        <!-- <h1 class="modal-title fs-5" >Modal title</h1> -->
-                        <a href="./Admin-UI/admin-login.php" type="hidden" accesskey="a"></a>
-                        <h1 class="fw-bold mb-0 fs-1 ">add notes</h1>
-                        <button type="button" class="btn-close closebtn" data-bs-dismiss="modal" aria-label="Close"></button>
-                      </div>               
-                        <div class="modal-body p-5 pt-0">
-                          <form class="" method="POST" action="">
-                            <div class="form-floating mb-3">
-                              <textarea name="notetitle" type="text" class="form-control rounded-3 " name="user-email" id="user-email" placeholder="name@example.com"></textarea>
-                                <label for="floatingInput">Title</label>
-                            </div>
-                              <div class="form-floating mb-3">
-                                <textarea name="notebody" type="text" class="form-control rounded-3" name="user-password" id="user-password" placeholder="password" style="height: 150px;"></textarea>
-                                  <label for="floatingInput">Body</label>
-                              </div>
-                              <div class="mt-4 mb-0">
-                                <div class="d-grid ">
-                                  <button class="btn btn-block" style=" background-color: #542C0C; color: white;"name="add" type="submit" value="Log in">Add Note</button>
-                                </div>
-                              </div>
-                           </form>
-                           
-                        </div>
+        </form> 
           
 
           </main>
       </main>
+    
+    
+ 
+  
+
     <script src="../JS/user-script.js "></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
   </body>
