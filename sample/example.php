@@ -2,6 +2,7 @@
 
     require_once ('../gabai-database.php');
     $notes = $gabai->get_notes();
+    $group = $gabai->get_group();
 
 ?>
 <!DOCTYPE html>
@@ -16,6 +17,11 @@
         <ul>
             <?php foreach($notes as $notes){?>
                 <li><?php echo $notes['note_title'];?> | <?php echo $notes['user_notes']; ?></li>
+            <?php }?>
+        </ul>
+        <ul>
+            <?php foreach($group as $group){?>
+                <li><?php echo $group['group_id'];?> | <?php echo $group['group_name']; ?> | <?php echo $group['members']; ?></li>
             <?php }?>
         </ul>
 </body>
