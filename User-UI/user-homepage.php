@@ -8,10 +8,10 @@
               echo '<script type="text/javascript">';
               echo ' alert("Cannot Log-in as User need to be Admin")';  //not showing an alert box.
               echo '</script>';
-              header("Location: ../User-UI/user-homepage.php");
+              header("Location: ../Homepage.php");
           }
       } else {
-          
+              header("Location: ../Homepage.php");
       }
       
 ?>
