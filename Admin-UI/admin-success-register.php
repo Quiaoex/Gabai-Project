@@ -1,3 +1,8 @@
+<?php
+
+    require_once '../Admin-UI/admin-data.php';
+
+?>
 <!DOCTYPE html>
 <html lang="en">
     <head>

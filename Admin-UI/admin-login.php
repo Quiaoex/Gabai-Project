@@ -2,8 +2,16 @@
 
     require_once "../gabai-database.php";
     $gabai->admin_login();
-
+    $userdetails = $gabai->get_userdata();
+    if(isset($userdetails)){
+        if(($userdetails) > 0){
+            header("Location: ../Admin-UI/admin-homepage.php");
+        }
+    } else {
+        
+    }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
     <head>

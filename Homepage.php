@@ -1,5 +1,5 @@
 <?php
-    include_once './register-user.php';
+    
 ?>
 <!doctype html>
 <html lang="en">
@@ -31,7 +31,7 @@
                     <div class="modal-content shadow mdlbg">
                       <div class="modal-header p-5 pb-4 border-bottom-0 text-center">
                         <!-- <h1 class="modal-title fs-5" >Modal title</h1> -->
-                        <a href="./Admin UI/admin-login.php" type="hidden" accesskey="a"></a>
+                        <a href="./Admin-UI/admin-login.php" type="hidden" accesskey="a"></a>
                         <h1 class="fw-bold mb-0 fs-1 ">Welcome back! User</h1>
                         <button type="button" class="btn-close closebtn" data-bs-dismiss="modal" aria-label="Close"></button>
                       </div>               

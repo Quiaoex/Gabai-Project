@@ -35,11 +35,12 @@ Class Gabai {
 
             $email = $_POST['email'];
             $password = md5($_POST['password']);
+            $access = 'admin';
             
 
         $connection = $this->openConnection();
-        $stmt = $connection->prepare("SELECT * FROM user WHERE email = ? AND password = ? ");
-        $stmt->execute([$email,$password]);
+        $stmt = $connection->prepare("SELECT * FROM user WHERE email = ? AND password = ? AND access = ?");
+        $stmt->execute([$email,$password,$access]);
         $user = $stmt->fetch();
         $total = $stmt->rowCount();
 
@@ -52,7 +53,7 @@ Class Gabai {
 
         } else {
             echo '<script type="text/javascript">';
-            echo ' alert("Log in Failed")';  //not showing an alert box.
+            echo ' alert("Log in Failed!")';  //not showing an alert box.
             echo '</script>';
         }
 
@@ -123,13 +124,16 @@ Class Gabai {
             $lname = $_POST['lname'];
             $email = $_POST['email'];
             $password = md5($_POST['password']);
+            $access = "admin";
 
 
         if($this->check_email_exist($email) == 0){
             $connection = $this->openConnection();
-            $stmt = $connection->prepare("INSERT INTO user(`first_name`,`last_name`,`email`,`password`)
-            VALUE (?,?,?,?)");
-            $stmt->execute([$fname,$lname,$email,$password]);
+            $stmt = $connection->prepare("INSERT INTO user(`first_name`,`last_name`,`email`,`password`,`access`)
+            VALUE (?,?,?,?,?)");
+            $stmt->execute([$fname,$lname,$email,$password,$access]);
+            header('Location: ../Admin-UI/admin-success-register.php');
+
             }else {
                 echo '<script type="text/javascript">';
                 echo ' alert("Email already taken.")';  //not showing an alert box.
