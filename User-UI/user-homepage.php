@@ -12,7 +12,7 @@
               
           }
       } else {
-              header("Location: ../Homepage.php");
+              header("Location: ../index.php");
       }
       
 ?>

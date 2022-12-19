@@ -34,6 +34,7 @@ Class Gabai {
 
             http_response_code(404);
             echo "Page not Found";
+            die;
 
     }
 
@@ -44,9 +45,10 @@ Class Gabai {
         }
 
         $_SESSION['userdata'] = array(
+                "id"=> $array['user_id'],"uid"=> $array['unique_user_id'],
                 "fullname" => $array['first_name']." ".$array['last_name'],
-                "id"=> $array['user_id'],
-                "access" => $array['access']
+                "access" => $array['access'],
+                "groupid" => $array['grp_unique_ids']
         );
 
         return $_SESSION['userdata'];
@@ -114,9 +116,8 @@ Class Gabai {
             header('Location: ../Admin-UI/admin-homepage.php');
 
         } else {
-            echo '<script type="text/javascript">';
-            echo ' alert("Log in Failed!")';  //not showing an alert box.
-            echo '</script>';
+            echo "<div class='alert alert-danger justify-content-center' style='text-align: center;' role='alert'>
+                       <strong> Log in Failed!</strong></div>";
         }
         }
     }
@@ -129,10 +130,16 @@ Class Gabai {
             $lname = $_POST['lname'];
             $email = $_POST['email'];
             $password = md5($_POST['password']);
+            $cnfirm = md5($_POST['confirm']);
             $access = "admin";
 
 
-        if($this->check_email_exist($email) == 0){
+            if($password !== $cnfirm ){
+                echo "<div class='alert alert-danger justify-content-center' style='text-align: center;' role='alert'>
+                        Password is mismatched!</div>";
+
+            }else{
+            if($this->check_email_exist($email) == 0){
             $connection = $this->openConnection();
             $stmt = $connection->prepare("INSERT INTO gabai_user (`first_name`,`last_name`,`email`,`password`,`access`)
             VALUE (?,?,?,?,?)");
@@ -140,12 +147,11 @@ Class Gabai {
             header('Location: ../Admin-UI/admin-success-register.php');
 
             }else {
-                echo '<script type="text/javascript">';
-                echo ' alert("Email already taken.")';  //not showing an alert box.
-                echo '</script>';
+                echo "<div class='alert alert-danger justify-content-center' style='text-align: center;' role='alert'>
+                        Email has already been taken!</div>";
             }
         }
-
+        }
     }
 
     public function user_login()
@@ -171,9 +177,8 @@ Class Gabai {
             header('Location: ./User-UI/user-homepage.php');
 
         } else {
-            echo '<script type="text/javascript">';
-            echo ' alert("Log in Failed!")';  //not showing an alert box.
-            echo '</script>';
+            echo "<div class='alert alert-danger justify-content-center' style='text-align: center;' role='alert'>
+                    <strong> Log in Failed!</strong></div>";;
         }
         }
     } 
@@ -199,10 +204,20 @@ Class Gabai {
             $lname = $_POST['lname'];
             $email = $_POST['email'];
             $password = md5($_POST['password']);
+            $confirm = md5($_POST['confirm']);
             $access = "user";
 
+            if( empty($fname) && empty($lname) && empty($email) && empty($password)&& empty($confirm)){
+                    echo "<div class='alert alert-danger justify-content-center' style='text-align: center;' role='alert'>
+                    <strong> Cannot be Empty!</strong></div>";
 
-        if($this->user_check_email_exist($email) == 0){
+            }else   {
+            if($password !== $confirm ){
+                echo "<div class='alert alert-danger justify-content-center' style='text-align: center;' role='alert'>
+                    <strong> Password is not Matched</strong></div>";
+
+            }else{
+            if($this->user_check_email_exist($email) == 0){
             $connection = $this->openConnection();
             $stmt = $connection->prepare("INSERT INTO gabai_user(`first_name`,`last_name`,`email`,`password`,`access`)
             VALUE (?,?,?,?,?)");
@@ -212,19 +227,21 @@ Class Gabai {
                 echo '</script>';
 
             }else {
-                echo '<script type="text/javascript">';
-                echo ' alert("Email already taken.")';  //not showing an alert box.
-                echo '</script>';
+                echo "<div class='alert alert-danger justify-content-center' style='text-align: center;' role='alert'>
+                       <strong> Email already Taken!</strong></div>";
             }
         }
-
+        }
+        }
     }
 
-    public function user_id($id)
+    public function get_user_id($uid)
     {
+        
+
         $connection = $this->openConnection();
         $stmt = $connection->prepare("SELECT * FROM gabai_user WHERE user_id = ?"); 
-        $stmt->execute([$id]);
+        $stmt->execute([$uid]);
         $id = $stmt->fetch();
         $total = $stmt->rowCount();
 
@@ -255,18 +272,17 @@ Class Gabai {
                 $stmt->execute([$noteid,$types,$notetitle,$notedata,$created]);
 
             }else {
-                echo '<script type="text/javascript">';
-                echo ' alert("Cannot be Empty.")';  //not showing an alert box.
-                echo '</script>';
+                echo "<div class='alert alert-danger justify-content-center' style='text-align: center;' role='alert'>
+                       <strong> Cannot be Empty!</strong></div>";;
                 
             }
         
     }
     }
 
-    public function get_user_notes()
+    public function get_user_notes($id)
     {
-        $id = 3;
+
 
         $connection = $this->openConnection();
         $stmt = $connection->prepare("SELECT user_id, note_id, note_title , note_body , created_by FROM 
@@ -283,14 +299,17 @@ Class Gabai {
 
     }
 
-    public function get_grp_notes()
+    public function get_grp_notes($grpid)
     {
-        $grpid = 1;
+
 
 
         $connection = $this->openConnection();
-        $stmt = $connection->prepare("SELECT group_id, group_name, group_name_id , members , group_note_title, group_note_body FROM
-        (SELECT * FROM gabai_group WHERE gabai_group.group_id = ? ) t1 INNER JOIN gabai_group_notes t2 ON t1.group_id = t2.group_name_id"); 
+        $stmt = $connection->prepare("SELECT grp_unique_ids ,first_name,last_name ,group_name,group_id, grp_unique_id, group_name_id ,member_unique_id,member_unique_id ,
+        group_note_title, group_note_body, created_by FROM
+        (SELECT * FROM gabai_user WHERE gabai_user.grp_unique_ids = ? ) t1 
+        INNER JOIN gabai_group t2 ON t1.grp_unique_ids = t2.grp_unique_id 
+        INNER JOIN gabai_group_notes t3 ON t2.grp_unique_id = t3.member_unique_id"); 
         $stmt->execute([$grpid]);
         $notes = $stmt->fetchall();
         $total = $stmt->rowCount();
@@ -316,7 +335,7 @@ Class Gabai {
             
             if(($notetitle > 0 && $notedata > 0)){
                 $connection = $this->openConnection();
-                $stmt = $connection->prepare("INSERT INTO user_data_notes (`note_id`,`note_type`,`note_title`,`note_body`,`created_by`)
+                $stmt = $connection->prepare("INSERT INTO gabai_group_notes (`note_id`,`note_type`,`note_title`,`note_body`,`created_by`)
                 VALUE (?,?,?,?,?)");
                 $stmt->execute([$noteid,$types,$notetitle,$notedata,$created]);
 

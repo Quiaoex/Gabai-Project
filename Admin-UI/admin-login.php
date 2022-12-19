@@ -19,7 +19,7 @@
         <script src="confirm-pass.js"></script>
     </head>
     <body class="body-bgs">
-    
+    <a href="../index.php" type="hidden" accesskey="s"></a>
         <div id="layoutAuthentication">
             <div id="layoutAuthentication_content">
                 <main>

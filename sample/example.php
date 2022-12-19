@@ -2,11 +2,12 @@
 
     require_once ('../gabai-database.php');
     $userdetails = $gabai->get_userdata();
-    $id = $_GET[$userdetails['id']];
-    $notes = $gabai->get_user_notes();
-    $grpnotes = $gabai->get_grp_notes();
-
-
+    $id = $userdetails['id'];
+    $uid = $userdetails['groupid'];
+    $notes = $gabai->get_user_notes($id);
+    $grpnotes = $gabai->get_grp_notes($uid);
+    
+print_r($userdetails);
 
 ?>
 <!DOCTYPE html>
@@ -26,7 +27,7 @@
         <ul>
             <?php foreach ($grpnotes as $grpnotes){?>
                 <li><?php echo $grpnotes['group_id'];?> | <?php echo $grpnotes['group_name_id'];?>| <?php echo $grpnotes['group_name'];?> 
-                | <?php echo $grpnotes['members'];?> 
+                | <?php echo $grpnotes['member_unique_id'];?> | <?php echo $grpnotes['created_by'];?> 
                 | <?php echo $grpnotes['group_note_title']; ?>| <?php echo $grpnotes['group_note_body']; ?></li>
             <?php }?>
         </ul>

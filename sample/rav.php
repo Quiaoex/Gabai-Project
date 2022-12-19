@@ -4,8 +4,8 @@
       $userdetails = $gabai->get_userdata();
       $gabai->add_note();
       $gabai->add_group_note();
-      $uid = $_GET[$userdetails['id']];
-      $getid = $gabai->user_id($uid);
+      $uid = $userdetails['id'];
+      $getid = $gabai->get_user_id($uid);
 
       if(isset($userdetails)){
         if(($userdetails['access'] != "user")){
@@ -15,7 +15,7 @@
             
         }
     } else {
-            header("Location: ../Homepage.php");
+            header("Location: ../index.php");
     }
     
       
