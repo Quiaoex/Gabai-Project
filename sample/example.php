@@ -1,8 +1,12 @@
 <?php
 
     require_once ('../gabai-database.php');
-    $notes = $gabai->get_notes();
-    $group = $gabai->get_group();
+    $userdetails = $gabai->get_userdata();
+    $id = $_GET[$userdetails['id']];
+    $notes = $gabai->get_user_notes();
+    $grpnotes = $gabai->get_grp_notes();
+
+
 
 ?>
 <!DOCTYPE html>
@@ -15,14 +19,17 @@
 </head>
 <body>
         <ul>
-            <?php foreach($notes as $notes){?>
-                <li><?php echo $notes['note_title'];?> |<?php echo $notes['note_title'];?> | <?php echo $notes['user_notes']; ?></li>
+            <?php foreach ($notes as $notes){?>
+                <li><?php echo $notes['user_id'];?> | <?php echo $notes['note_id'];?> |<?php echo $notes['note_title'];?> | <?php echo $notes['note_body']; ?></li>
             <?php }?>
         </ul>
         <ul>
-            <?php foreach($group as $group){?>
-                <li><?php echo $group['group_id'];?> | <?php echo $group['group_name']; ?> | <?php echo $group['members']; ?></li>
+            <?php foreach ($grpnotes as $grpnotes){?>
+                <li><?php echo $grpnotes['group_id'];?> | <?php echo $grpnotes['group_name_id'];?>| <?php echo $grpnotes['group_name'];?> 
+                | <?php echo $grpnotes['members'];?> 
+                | <?php echo $grpnotes['group_note_title']; ?>| <?php echo $grpnotes['group_note_body']; ?></li>
             <?php }?>
         </ul>
+
 </body>
 </html>

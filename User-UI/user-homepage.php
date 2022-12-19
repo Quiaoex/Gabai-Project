@@ -262,11 +262,12 @@
           </div>
     
           <div class="d-flex align-items-center offset-2">
-            <h1 class="w-100 me-3">Notes</h1>
-    
-            <div class="flex-shrink-0 dropdown">
+            <h1 class="w-100">Notes</h1>
+            <div class="row">
+            
+              <div class="flex-shrink-0 dropdown"> 
               <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                <img src="https://github.com/mdo.png" alt="mdo" width="32" height="32" class="rounded-circle">
+              <b><?php echo $userdetails['fullname'] ?></b> <img  src="https://github.com/mdo.png" alt="mdo" width="32" height="32" class="rounded-circle ms-2">
               </a>
               <ul class="dropdown-menu text-small shadow">
                 <li><a class="dropdown-item" href="#">Settings</a></li>
@@ -276,6 +277,7 @@
               </ul>
             </div>
           </div>
+        </div>
         </div>
       </header>
 

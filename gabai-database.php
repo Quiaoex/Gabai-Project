@@ -2,7 +2,7 @@
 
 Class Gabai {
 
-    private $server = "mysql:host=localhost;dbname=gabai_database";
+    private $server = "mysql:host=localhost; dbname=gabai_database";
     private $user = "root";
     private $pass = "";
     private $options = array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC);
@@ -45,7 +45,7 @@ Class Gabai {
 
         $_SESSION['userdata'] = array(
                 "fullname" => $array['first_name']." ".$array['last_name'],
-                "id" => $array['id'],
+                "id"=> $array['user_id'],
                 "access" => $array['access']
         );
 
@@ -84,7 +84,7 @@ Class Gabai {
         $email = $_POST['email'];
 
         $connection = $this->openConnection();
-        $stmt = $connection->prepare("SELECT * FROM user WHERE email = ?");
+        $stmt = $connection->prepare("SELECT * FROM gabai_user WHERE email = ?");
         $stmt->execute([$email,]);
         $total = $stmt->rowCount();
 
@@ -101,7 +101,7 @@ Class Gabai {
             
 
         $connection = $this->openConnection();
-        $stmt = $connection->prepare("SELECT * FROM user WHERE email = ? AND password = ? AND access = ?");
+        $stmt = $connection->prepare("SELECT * FROM gabai_user WHERE email = ? AND password = ? AND access = ?");
         $stmt->execute([$email,$password,$access]);
         $user = $stmt->fetch();
         $total = $stmt->rowCount();
@@ -134,7 +134,7 @@ Class Gabai {
 
         if($this->check_email_exist($email) == 0){
             $connection = $this->openConnection();
-            $stmt = $connection->prepare("INSERT INTO user(`first_name`,`last_name`,`email`,`password`,`access`)
+            $stmt = $connection->prepare("INSERT INTO gabai_user (`first_name`,`last_name`,`email`,`password`,`access`)
             VALUE (?,?,?,?,?)");
             $stmt->execute([$fname,$lname,$email,$password,$access]);
             header('Location: ../Admin-UI/admin-success-register.php');
@@ -158,7 +158,7 @@ Class Gabai {
             
 
         $connection = $this->openConnection();
-        $stmt = $connection->prepare("SELECT * FROM user WHERE email = ? AND password = ? AND access = ?");
+        $stmt = $connection->prepare("SELECT * FROM gabai_user WHERE email = ? AND password = ? AND access = ?");
         $stmt->execute([$email,$password,$access]);
         $user = $stmt->fetch();
         $total = $stmt->rowCount();
@@ -183,7 +183,7 @@ Class Gabai {
         $email = $_POST['email'];
 
         $connection = $this->openConnection();
-        $stmt = $connection->prepare("SELECT * FROM user WHERE email = ?");
+        $stmt = $connection->prepare("SELECT * FROM gabai_user WHERE email = ?");
         $stmt->execute([$email,]);
         $total = $stmt->rowCount();
 
@@ -204,7 +204,7 @@ Class Gabai {
 
         if($this->user_check_email_exist($email) == 0){
             $connection = $this->openConnection();
-            $stmt = $connection->prepare("INSERT INTO user(`first_name`,`last_name`,`email`,`password`,`access`)
+            $stmt = $connection->prepare("INSERT INTO gabai_user(`first_name`,`last_name`,`email`,`password`,`access`)
             VALUE (?,?,?,?,?)");
             $stmt->execute([$fname,$lname,$email,$password,$access]);
                 echo '<script type="text/javascript">';
@@ -223,7 +223,7 @@ Class Gabai {
     public function user_id($id)
     {
         $connection = $this->openConnection();
-        $stmt = $connection->prepare("SELECT * FROM user WHERE id = ?"); 
+        $stmt = $connection->prepare("SELECT * FROM gabai_user WHERE user_id = ?"); 
         $stmt->execute([$id]);
         $id = $stmt->fetch();
         $total = $stmt->rowCount();
@@ -250,7 +250,7 @@ Class Gabai {
             
             if(($types > 0 && $notetitle > 0 && $notedata > 0)){
                 $connection = $this->openConnection();
-                $stmt = $connection->prepare("INSERT INTO user_data (`note_id`,`type`,`note_title`,`user_notes`,`created_by`)
+                $stmt = $connection->prepare("INSERT INTO user_data_notes (`note_id`,`note_type`,`note_title`,`note_body`,`created_by`)
                 VALUE (?,?,?,?,?)");
                 $stmt->execute([$noteid,$types,$notetitle,$notedata,$created]);
 
@@ -264,32 +264,14 @@ Class Gabai {
     }
     }
 
-    public function get_notes()
+    public function get_user_notes()
     {
-        $id = 36;
-
+        $id = 3;
 
         $connection = $this->openConnection();
-        $stmt = $connection->prepare("SELECT * FROM user_data WHERE note_id = ?"); 
-        $stmt->execute([$id,]);
-        $notes = $stmt->fetchall();
-        $total = $stmt->rowCount();
-
-        if($total > 0){
-            return $notes;
-        }else {
-            return FALSE;
-        }
-    }
-
-    public function get_group()
-    {
-        $group = 'Chicken';
-
-        $connection = $this->openConnection();
-        $stmt = $connection->prepare("SELECT group_id, group_name, group_name_id , members FROM (SELECT * FROM user_group WHERE user_group.group_name = ? ) t1 INNER JOIN user_group_member t2 
-        ON t1.group_name = t2.group_name_id"); 
-        $stmt->execute([$group]);
+        $stmt = $connection->prepare("SELECT user_id, note_id, note_title , note_body , created_by FROM 
+        (SELECT * FROM gabai_user WHERE gabai_user.user_id = ?) t1 INNER JOIN gabai_user_notes t2 ON t1.user_id = t2.note_id"); 
+        $stmt->execute([$id]);
         $groups = $stmt->fetchAll();
         $total = $stmt->rowCount();
 
@@ -301,14 +283,82 @@ Class Gabai {
 
     }
 
-    public function get_group_notes()
+    public function get_grp_notes()
+    {
+        $grpid = 1;
+
+
+        $connection = $this->openConnection();
+        $stmt = $connection->prepare("SELECT group_id, group_name, group_name_id , members , group_note_title, group_note_body FROM
+        (SELECT * FROM gabai_group WHERE gabai_group.group_id = ? ) t1 INNER JOIN gabai_group_notes t2 ON t1.group_id = t2.group_name_id"); 
+        $stmt->execute([$grpid]);
+        $notes = $stmt->fetchall();
+        $total = $stmt->rowCount();
+
+        if($total > 0){
+            return $notes;
+        }else {
+            return FALSE;
+        }
+    }
+
+    public function add_group_note()
+    {
+
+        if(isset($_POST['add-group-note'])){
+
+
+            $noteid = $_POST['id'];
+            $types = $_POST['note_type'];
+            $notetitle = $_POST['groupnotetitle'];
+            $notedata = $_POST['groupnotebody'];
+            $created = $_POST['created-by'];
+            
+            if(($notetitle > 0 && $notedata > 0)){
+                $connection = $this->openConnection();
+                $stmt = $connection->prepare("INSERT INTO user_data_notes (`note_id`,`note_type`,`note_title`,`note_body`,`created_by`)
+                VALUE (?,?,?,?,?)");
+                $stmt->execute([$noteid,$types,$notetitle,$notedata,$created]);
+
+            }else {
+                echo '<script type="text/javascript">';
+                echo ' alert("Cannot be Empty.")';  //not showing an alert box.
+                echo '</script>';
+                
+            }
+        }
+    }
+
+    
+
+    public function get_group()
     {
         $group = 'Chicken';
 
         $connection = $this->openConnection();
-        $stmt = $connection->prepare("SELECT group_id, group_name, group_name_id , members FROM (SELECT * FROM user_group WHERE user_group.group_name = ? ) t1 INNER JOIN user_group_member t2 
-        ON t1.group_name = t2.group_name_id"); 
+        $stmt = $connection->prepare("SELECT group_id, group_name, group_name_id , members FROM
+        (SELECT * FROM user_group WHERE user_group.group_name = ? ) t1 INNER JOIN user_group_member t2 ON t1.group_name = t2.group_name_id"); 
         $stmt->execute([$group]);
+        $groups = $stmt->fetchAll();
+        $total = $stmt->rowCount();
+
+        if($total > 0){
+            return $groups;
+        }else {
+            return FALSE;
+        }
+
+    }
+    
+    public function get_group_notes()
+    {
+        $notetype = 'group';
+        $grp = 'Hotdog';
+
+        $connection = $this->openConnection();
+        $stmt = $connection->prepare("SELECT note_id, note_type, note_title , note_body , created_by ,note_types ,group_name_id, members FROM 
+        (SELECT * FROM user_data_notes WHERE user_data_notes.note_type = ?) t1 INNER JOIN user_group_member t2 ON t1.note_type = t2.note_types"); 
+        $stmt->execute([$notetype]);
         $groups = $stmt->fetchAll();
         $total = $stmt->rowCount();
 

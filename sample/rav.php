@@ -3,9 +3,9 @@
       require_once ('../gabai-database.php');
       $userdetails = $gabai->get_userdata();
       $gabai->add_note();
-      $note = $gabai->get_notes();
-      $id = $_GET['id'];
-      $getid = $gabai->user_id($id);
+      $gabai->add_group_note();
+      $uid = $_GET[$userdetails['id']];
+      $getid = $gabai->user_id($uid);
 
       if(isset($userdetails)){
         if(($userdetails['access'] != "user")){
@@ -53,6 +53,25 @@ print_r($userdetails);
                 </div>
               </div>
     </form>
-    <?php print_r($getid) ?>
+    <!--<form method="POST" name="group-note-add">
+    <div class="col-4 col-sm-12 col-md-4">
+              <div class="notebox">
+                  <div class="notedatecontainer"><h6>6 June</h6></div>
+                  <input type="hidden" name="id" value="<?php echo $userdetails['id']; ?>">
+                  <input type="hidden" name="note_type" value="group">
+                  <div class="notecontainer">
+                  <textarea name="groupnotetitle" class="form-control noteheading" maxlength="25" placeholder="Title"></textarea>
+                  </div>
+                  <div class="notecontainer">
+                  <textarea name="groupnotebody" class="notedata form-control" style="height: 190px" placeholder="Body"></textarea> 
+                  <input type="hidden" name="created-by" value="<?php echo $userdetails['fullname']; ?>" >
+                  </div>
+                  <div class="noteaction">
+                  <button name="add-group-note" class="fa fa-floppy-o savebutton" id="savebtn">add</button>
+                  <button  name="delete-group-note" class="fa fa-trash deletebutton" id="deletebtn">delete</button>
+                  </div>
+                </div>
+              </div>
+    </form>-->
 </body>
 </html>
