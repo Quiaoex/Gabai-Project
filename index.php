@@ -2,6 +2,7 @@
 
     require_once ('./gabai-database.php');
     require_once ('./user-data.php');
+    
     $gabai->user_login();
     $gabai->user_register();
     

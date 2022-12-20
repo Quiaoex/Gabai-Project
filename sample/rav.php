@@ -5,7 +5,7 @@
       $gabai->add_note();
       $gabai->add_group_note();
       $uid = $userdetails['id'];
-      $getid = $gabai->get_user_id($uid);
+
 
       if(isset($userdetails)){
         if(($userdetails['access'] != "user")){

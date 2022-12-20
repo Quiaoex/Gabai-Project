@@ -2,6 +2,19 @@
 
     require_once ('../gabai-database.php');
     $userdetails = $gabai->get_userdata();
+    $userdetails = $gabai->get_userdata();  
+
+    if(isset($userdetails)){
+      if(($userdetails['access'] != "user")){
+          echo '<script type="text/javascript">';
+          echo ' alert("Cannot Log-in as Admin need to be User")';  //not showing an alert box.
+          echo '</script>';
+          
+      }
+  } else {
+          header("Location: ../index.php");
+  }
+    
 
 ?>
 <!doctype html>

@@ -397,44 +397,19 @@ Class Gabai {
         }
     }
 
-    public function make_report()
+    public function default_pass()
     {
-        if(isset($_POST['make_report'])){
+        if(isset($_POST['defaultpass']))
+        $password = $_POST['default_pass'];
 
         $connection = $this->openConnection();
-        $stmt = $connection->query("SELECT * FROM gabai_user "  );
-        $users = $stmt->fetchAll();
-        $total = $stmt->rowCount();
-        $filename = 'users.xls';
+        $stmt = $connection->prepare("UPDATE `gabai_user` SET `password`='[value-6]' WHERE  password = ?");
+        $stmt->execute([$password]);
+        $stmt->rowCount();
 
-        header("Content-Type: application/xls");    
-        header("Content-Disposition: attachment; filename=$filename");  
-        header("Pragma: no-cache"); 
-        header("Expires: 0");
-        $separator = "\t";
 
-        if (!empty($total)){
         
-        echo implode($separator, array_keys($users[0])) . "\n";
-        foreach($users as $users){
-        
-            //Clean the data and remove any special characters that might conflict
-            foreach($users as $k => $v){
-                $users[$k] = str_replace($separator . "$", "", $users[$k]);
-                $users[$k] = preg_replace("/\r\n|\n\r|\n|\r/", " ", $users[$k]);
-                $users[$k] = trim($users[$k]);
-            }
-            
-            //Implode and print the columns out using the 
-            //$separator as the glue parameter
-            echo implode($separator, $users) . "\n";  
 
-            
-
-        }
-        }
-
-    }
     }
 }
 
