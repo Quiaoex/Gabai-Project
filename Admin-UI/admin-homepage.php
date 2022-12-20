@@ -5,6 +5,7 @@
     $user = $gabai->get_users();
     $delet = $gabai->delete_user();
     $add = $gabai->add_user();  
+    
 
     if(isset($userdetails)){
         if(($userdetails['access'] != "admin")){
@@ -56,8 +57,9 @@
                     <div class="container-fluid px-4" style="margin-top: 50px; background-color: #E9E3D7;">
                         <h1 class="mt-4 pt-4">Dashboard</h1>
                         <ol class="breadcrumb mb-4">
-                        <button   data-bs-toggle="modal" data-bs-target="#makereport" class="btn rounded-pill me-2" style="background-color: #542C0C; color: white;">Make Report</button>
-                           <button name="add-user" class="btn rounded-pill" data-bs-toggle="modal" data-bs-target="#register" style="background-color: #542C0C; color: white;">ADD user</button>
+                        <form class="form-inline me-2" method="post" action="./report.php">
+                            <button type="submit" id="pdf" name="generate_pdf" class="btn rounded-pill" style="background-color: #542C0C; color: white;"> <i class="fa fa-pdf" aria-hidden="true"></i><span class="ms-1 pe-1"> Generate Report</span></button></form>
+                            <button name="add-user" class="btn rounded-pill" data-bs-toggle="modal" data-bs-target="#register" style="background-color: #542C0C; color: white;">ADD user</button>
                             <a href=""><img src="./assets/img/refresh.png" width="50" alt=""></a>
                         </ol>
                         <div class="card mb-4 rounded-5 mb-5">
@@ -73,6 +75,7 @@
                                             <th>First Name</th>
                                             <th>Last Name</th>
                                             <th>Email</th>
+                                            <th>Password</th>
                                             <th>Access</th>
                                             <th>Date Created</th>
                                             <th>Delete</th>
@@ -85,6 +88,7 @@
                                             <th>First Name</th>
                                             <th>Last Name</th>
                                             <th>Email</th>
+                                            <th>Password</th>
                                             <th>Access</th>
                                             <th>Date Created</th>
                                             <th>Delete</th>
@@ -93,13 +97,15 @@
                                     <tbody><?php foreach ($user as $user){?>
                                         <tr> <form action="" method="POST">
                                             <input type="hidden" name="user-id" value="<?php $user['user_id'];  ?>">
+                                            <input type="hidden" name="default_pass" value="<?php $user['password']; ?>">
                                             <td><?php echo $uid = $user['user_id'];  ?></td>
                                             <td><?php echo $user['first_name']; ?></td>
                                             <td><?php echo $user['last_name']; ?></td>
                                             <td><?php echo $user['email']; ?></td>
+                                            <td><?php echo $pass = $user['password']; ?></td>
                                             <td><?php echo $user['access']; ?></td>
                                             <td><?php echo $user['date_created']; ?></td>
-                                            <td><button name="delete" data-bs-toggle="modal" data-bs-target ="#deletemodal" type="submit" class="btn btn-danger deletebtn"> DELETE </button></td>
+                                            <td><button name="delete" data-bs-toggle="modal" data-bs-target ="#deletemodal" type="submit" class="btn btn-danger deletebtn" value="<?php $uid ?>"> DELETE </button></td>     
                                             </form></tr>
                                      <?php }  ?>
                                     </tbody>
@@ -112,6 +118,7 @@
                 <footer class="py-4 bg-light mt-5">
                     <div class="container-fluid px-4">
                         <div class="d-flex align-items-center justify-content-between small">
+                            <hr>
                             <div class="text-muted">Copyright &copy; Gabai 2022</div>
                             <div>
                 <!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||| -->
@@ -120,7 +127,7 @@
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel"> Delete Student Data </h5>
+                                <h5 class="modal-title" id="exampleModalLabel"> Delete User Data </h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
@@ -144,50 +151,23 @@
                     </div>
                 </div>
                 <!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||| -->
-                <div type = "" class="modal fade" id="makereport" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-                    aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel"> Delete Student Data </h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <form action="" method="POST">
-                                <div class="modal-body">
-                                <select name="access" class="form-select" id="floatingSelect" aria-label="Floating label select example">
-                                        <option selected aria-placeholder="Open this Select Menu"></option>
-                                        <option value="xlsx">.xlsx</option>
-                                        <option value="xls">.xls</option>
-                                        <option value="csv">.csv</option>
-                                    </select>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"> NO </button>
-                                    <button type="submit" name="make_report" class="btn btn-primary">Make Report </button>
-                                </div>
-                            </form>
-
-                        </div>
-                    </div>
-                </div>
+                        
 
                 <!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||| -->
                 
                 <div type = "hidden" class="modal fade" id="register" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
                         <div class="modal-content shadow mdlbg ">
-                        <div class="modal-header p-5 pb-4 border-bottom-0 text-center">
+                        <div class="modal-header p-5 pb-4 border-bottom-0 text-center pb-5" style=" background-color: #542C0C; color: white;">
                             <!-- <h1 class="modal-title fs-5" >Modal title</h1> -->
-                            <h1 class="fw-bold mb-0 fs-1 ">ADD User</h1>
+                            <h1 class="fw-bold mb-0 fs-1 " style="text-align: center;">Add New User</h1>
                             <button type="button" class="btn-close closebtn" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>               
-                            <div class="modal-body p-5 pt-0">
+                            <div class="modal-body p-5 pt-0" style="background-image: url(../User-UI/Images/Background.png) ; ">
                             <form class="" action="" method="POST">
                                 <div class="row">
                                 <div class="form-floating">
-                                    <div class="form-floating mb-3">
+                                    <div class="form-floating mb-3 mt-3">
                                     <input type="text" class="form-control rounded-3" name="fname" id="fname" placeholder="name@example.com">
                                     <label for="firstname">First Name</label>
                                     </div>
@@ -220,7 +200,7 @@
                                     </div>
                                 <div class="mt-4 mb-0">
                                     <div class="d-grid ">
-                                    <button class="btn btn-block" style=" background-color: #542C0C; color: white;"name="register" type="submit" value="Create Account">Register</button>
+                                    <button class="btn btn-block" style=" background-color: #542C0C; color: white;"name="register" type="submit" value="Create Account">Add Account</button>
                                     </div>
                                 </div>           
                                 </form>

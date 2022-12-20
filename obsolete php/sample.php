@@ -26,6 +26,44 @@
         echo "Your registration is done.";
     }
     }
+    public function get_group()
+    {
+        $group = 'Chicken';
+
+        $connection = $this->openConnection();
+        $stmt = $connection->prepare("SELECT group_id, group_name, group_name_id , members FROM
+        (SELECT * FROM user_group WHERE user_group.group_name = ? ) t1 INNER JOIN user_group_member t2 ON t1.group_name = t2.group_name_id"); 
+        $stmt->execute([$group]);
+        $groups = $stmt->fetchAll();
+        $total = $stmt->rowCount();
+
+        if($total > 0){
+            return $groups;
+        }else {
+            return FALSE;
+        }
+
+    }
+    
+    public function get_group_notes()
+    {
+        $notetype = 'group';
+        $grp = 'Hotdog';
+
+        $connection = $this->openConnection();
+        $stmt = $connection->prepare("SELECT note_id, note_type, note_title , note_body , created_by ,note_types ,group_name_id, members FROM 
+        (SELECT * FROM user_data_notes WHERE user_data_notes.note_type = ?) t1 INNER JOIN user_group_member t2 ON t1.note_type = t2.note_types"); 
+        $stmt->execute([$notetype]);
+        $groups = $stmt->fetchAll();
+        $total = $stmt->rowCount();
+
+        if($total > 0){
+            return $groups;
+        }else {
+            return FALSE;
+        }
+
+    }
 ?>
 
 <html>
