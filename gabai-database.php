@@ -235,23 +235,6 @@ Class Gabai {
         }
     }
 
-    public function get_user_id($uid)
-    {
-        
-
-        $connection = $this->openConnection();
-        $stmt = $connection->prepare("SELECT * FROM gabai_user WHERE user_id = ?"); 
-        $stmt->execute([$uid]);
-        $id = $stmt->fetch();
-        $total = $stmt->rowCount();
-
-        if($total > 0){
-            return $id;
-        } else {
-            return $this->show_404();
-        }
-        
-    }
 
     public function add_note()
     {
@@ -294,7 +277,7 @@ Class Gabai {
         if($total > 0){
             return $groups;
         }else {
-            return FALSE;
+            return $this->show_404();
         }
 
     }
@@ -317,7 +300,7 @@ Class Gabai {
         if($total > 0){
             return $notes;
         }else {
-            return FALSE;
+            return $this->show_404();
         }
     }
 
@@ -347,50 +330,114 @@ Class Gabai {
             }
         }
     }
-
     
-
-    public function get_group()
-    {
-        $group = 'Chicken';
+    public function get_users()
+    {   
+        $access = 'user';
 
         $connection = $this->openConnection();
-        $stmt = $connection->prepare("SELECT group_id, group_name, group_name_id , members FROM
-        (SELECT * FROM user_group WHERE user_group.group_name = ? ) t1 INNER JOIN user_group_member t2 ON t1.group_name = t2.group_name_id"); 
-        $stmt->execute([$group]);
-        $groups = $stmt->fetchAll();
+        $stmt = $connection->prepare("SELECT * FROM gabai_user WHERE access = ? "  );
+        $stmt->execute([$access]);
+        $users = $stmt->fetchAll();
         $total = $stmt->rowCount();
 
         if($total > 0){
-            return $groups;
-        }else {
-            return FALSE;
-        }
-
-    }
-    
-    public function get_group_notes()
-    {
-        $notetype = 'group';
-        $grp = 'Hotdog';
-
-        $connection = $this->openConnection();
-        $stmt = $connection->prepare("SELECT note_id, note_type, note_title , note_body , created_by ,note_types ,group_name_id, members FROM 
-        (SELECT * FROM user_data_notes WHERE user_data_notes.note_type = ?) t1 INNER JOIN user_group_member t2 ON t1.note_type = t2.note_types"); 
-        $stmt->execute([$notetype]);
-        $groups = $stmt->fetchAll();
-        $total = $stmt->rowCount();
-
-        if($total > 0){
-            return $groups;
-        }else {
-            return FALSE;
+            return $users;
+        } else {
+            
         }
 
     }
 
-    
+    public function delete_user()
+    {
+        if(isset($_POST['delete'])){
+
+        $id = $_POST['delete_id'];
+
+        $connection = $this->openConnection();
+        $stmt = $connection->prepare("DELETE FROM gabai_user WHERE user_id = ? ");
+        $stmt->execute([$id]);
+        $stmt->rowCount();
+
+        header("Location: ../Admin-UI/admin-homepage.php");
+    }
+   
+    }
+
+    public function add_user()
+    {   
+        if(isset($_POST['register'])){
+            
+            $fname = $_POST['fname'];
+            $lname = $_POST['lname'];
+            $email = $_POST['email'];
+            $password = md5($_POST['password']);
+            $cnfirm = md5($_POST['confirm']);
+            $access = $_POST['access'];
+
+
+            if($password !== $cnfirm ){
+                echo "<div class='alert alert-danger justify-content-center' style='text-align: center;' role='alert'>
+                        Password is mismatched!</div>";
+
+            }else{
+            if($this->check_email_exist($email) == 0){
+            $connection = $this->openConnection();
+            $stmt = $connection->prepare("INSERT INTO gabai_user (`first_name`,`last_name`,`email`,`password`,`access`)
+            VALUE (?,?,?,?,?)");
+            $stmt->execute([$fname,$lname,$email,$password,$access]);
+            header('Location: ../Admin-UI/admin-success-register.php');
+
+            }else {
+                echo "<div class='alert alert-danger justify-content-center' style='text-align: center;' role='alert'>
+                        Email has already been taken!</div>";
+            }
+        }
+        }
+    }
+
+    public function make_report()
+    {
+        if(isset($_POST['make_report'])){
+
+        $connection = $this->openConnection();
+        $stmt = $connection->query("SELECT * FROM gabai_user "  );
+        $users = $stmt->fetchAll();
+        $total = $stmt->rowCount();
+        $filename = 'users.xls';
+
+        header("Content-Type: application/xls");    
+        header("Content-Disposition: attachment; filename=$filename");  
+        header("Pragma: no-cache"); 
+        header("Expires: 0");
+        $separator = "\t";
+
+        if (!empty($total)){
+        
+        echo implode($separator, array_keys($users[0])) . "\n";
+        foreach($users as $users){
+        
+            //Clean the data and remove any special characters that might conflict
+            foreach($users as $k => $v){
+                $users[$k] = str_replace($separator . "$", "", $users[$k]);
+                $users[$k] = preg_replace("/\r\n|\n\r|\n|\r/", " ", $users[$k]);
+                $users[$k] = trim($users[$k]);
+            }
+            
+            //Implode and print the columns out using the 
+            //$separator as the glue parameter
+            echo implode($separator, $users) . "\n";  
+
+            
+
+        }
+        }
+
+    }
+    }
 }
+
 $gabai = new Gabai();
 
 ?>
