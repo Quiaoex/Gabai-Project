@@ -45,7 +45,7 @@ Class Gabai {
         }
 
         $_SESSION['userdata'] = array(
-                "id"=> $array['user_id'],"uid"=> $array['unique_user_id'],
+                "id"=> $array['user_id'],
                 "fullname" => $array['first_name']." ".$array['last_name'],
                 "access" => $array['access'],
                 "groupid" => $array['grp_unique_ids']
@@ -239,20 +239,19 @@ Class Gabai {
     public function add_note()
     {
 
-        if(isset($_POST['add'])){
+        if(isset($_POST['add-note'])){
 
 
             $noteid = $_POST['id'];
-            $types = $_POST['note_type'];
             $notetitle = $_POST['notetitle'];
             $notedata = $_POST['notebody'];
             $created = $_POST['created-by'];
             
-            if(($types > 0 && $notetitle > 0 && $notedata > 0)){
+            if(( $noteid > 0 && $notetitle > 0 && $notedata > 0 && $created > 0)){
                 $connection = $this->openConnection();
-                $stmt = $connection->prepare("INSERT INTO user_data_notes (`note_id`,`note_type`,`note_title`,`note_body`,`created_by`)
-                VALUE (?,?,?,?,?)");
-                $stmt->execute([$noteid,$types,$notetitle,$notedata,$created]);
+                $stmt = $connection->prepare("INSERT INTO gabai_user_notes (`note_id`,`note_title`,`note_body`,`created_by`)
+                VALUE (?,?,?,?)");
+                $stmt->execute([$noteid,$notetitle,$notedata,$created]);
 
             }else {
                 echo "<div class='alert alert-danger justify-content-center' style='text-align: center;' role='alert'>
@@ -268,7 +267,7 @@ Class Gabai {
 
 
         $connection = $this->openConnection();
-        $stmt = $connection->prepare("SELECT user_id, note_id, note_title , note_body , created_by FROM 
+        $stmt = $connection->prepare("SELECT id,user_id, note_id, note_title , note_body , created_by FROM 
         (SELECT * FROM gabai_user WHERE gabai_user.user_id = ?) t1 INNER JOIN gabai_user_notes t2 ON t1.user_id = t2.note_id"); 
         $stmt->execute([$id]);
         $groups = $stmt->fetchAll();
@@ -277,15 +276,13 @@ Class Gabai {
         if($total > 0){
             return $groups;
         }else {
-            return $this->show_404();
+            
         }
 
     }
 
     public function get_grp_notes($grpid)
     {
-
-
 
         $connection = $this->openConnection();
         $stmt = $connection->prepare("SELECT grp_unique_ids ,first_name,last_name ,group_name,group_id, grp_unique_id, group_name_id ,member_unique_id,member_unique_id ,
@@ -300,7 +297,7 @@ Class Gabai {
         if($total > 0){
             return $notes;
         }else {
-            return $this->show_404();
+
         }
     }
 
@@ -329,6 +326,21 @@ Class Gabai {
                 
             }
         }
+    }
+
+    public function delete_note()
+    {
+        if(isset($_POST['delete_note'])){
+
+        $id = $_POST['nid'];
+
+        $connection = $this->openConnection();
+        $stmt = $connection->prepare("DELETE FROM gabai_user_notes WHERE id = ? ");
+        $stmt->execute([$id]);
+        $stmt->rowCount();
+            
+        
+    }
     }
     
     public function get_users()

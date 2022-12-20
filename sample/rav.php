@@ -4,7 +4,9 @@
       $userdetails = $gabai->get_userdata();
       $gabai->add_note();
       $gabai->add_group_note();
-      $uid = $userdetails['id'];
+      $id = $userdetails['id'];
+      $notes = $gabai->get_user_notes($id);
+      $gabai->delete_note();
 
 
       if(isset($userdetails)){
@@ -46,13 +48,28 @@ print_r($userdetails);
                   <textarea name="notebody" class="notedata form-control" style="height: 190px" placeholder="Body"></textarea> 
                   <input type="hidden" name="created-by" value="<?php echo $userdetails['fullname']; ?>" >
                   </div>
+                  <div class="notecontainer">
+                  <textarea name="nid" class="notedata form-control"  placeholder="note_ID"></textarea> 
+                  </div>
                   <div class="noteaction">
-                  <button name="add" class="fa fa-floppy-o savebutton" id="savebtn">add</button>
-                  <button name="delete" class="fa fa-trash deletebutton" id="deletebtn">delete</button>
+                  <button name="add-note" class="fa fa-floppy-o savebutton" id="savebtn">add</button>
+                  <input type="hidden" value="">
+                  <button name="delete_note" class="fa fa-trash deletebutton" id="deletebtn">delete</button>
                   </div>
                 </div>
               </div>
     </form>
+    <tr>
+            <td>
+            <?php foreach ($notes as $notes){?>
+                <th><?php print_r ($notes['id']); ?></th>
+                <th><?php print_r ($notes['note_id']);?> </th>
+                <th><?php print_r ($notes['note_title']);?> </th>
+                <th><?php print_r ($notes['note_body']); ?></th>
+            <?php } ?>
+            </td>
+        </tr>
+
     <!--<form method="POST" name="group-note-add">
     <div class="col-4 col-sm-12 col-md-4">
               <div class="notebox">
@@ -73,5 +90,6 @@ print_r($userdetails);
                 </div>
               </div>
     </form>-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
 </body>
 </html>
