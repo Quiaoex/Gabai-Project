@@ -49,13 +49,13 @@
                                             <div class="row mb-3">
                                                 <div class="col-md-6">
                                                     <div class="form-floating mb-3 mb-md-0">
-                                                        <input class="form-control"name="password" id="password" type="password" placeholder="Create a password" minlength="12" required/>
+                                                        <input class="form-control"name="password" id="password" type="password" placeholder="Create a password" minlength="8" required/>
                                                         <label for="inputPassword">Password</label>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="form-floating mb-3 mb-md-0">
-                                                        <input class="form-control" name="confirm" id="confirm" type="password" placeholder="Confirm password" minlength="12" required />
+                                                        <input class="form-control" name="confirm" id="confirm" type="password" placeholder="Confirm password" minlength="8" required />
                                                         <label for="inputPasswordConfirm">Confirm Password</label>
                                                     </div>
                                                 </div>
